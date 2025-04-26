@@ -11,7 +11,7 @@ def stats(country, beginning_date, ending_date):
     total_deaths = 0
 
     # Update the file path to use an absolute path
-    file_path = os.path.join(os.path.dirname(__file__), 'WHO-COVID-19-global-data - cases and deaths.csv')
+    file_path = os.path.join(os.path.dirname(__file__), 'dataSet.csv')
 
     with open(file_path, 'r') as file:
         reader = csv.DictReader(file)
