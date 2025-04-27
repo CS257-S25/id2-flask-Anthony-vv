@@ -1,4 +1,5 @@
 import csv
+import os
 from datetime import datetime
 
 def stats(country, beginning_date, ending_date):
@@ -9,7 +10,10 @@ def stats(country, beginning_date, ending_date):
     total_cases = 0
     total_deaths = 0
 
-    with open('Data/WHO-COVID-19-global-data.csv', 'r') as file:
+    # Update the file path to use an absolute path
+    file_path = os.path.join(os.path.dirname(__file__), 'dataSet.csv')
+
+    with open(file_path, 'r') as file:
         reader = csv.DictReader(file)
         for row in reader:
             if row['Country'] == country or row['Country_code'] == country:
