@@ -1,9 +1,11 @@
-"""uniit tests for the Flask application for COVID-19 stats comparison"""
+"""Unit tests for the Flask application for COVID-19 stats comparison"""
+
 import unittest
 from app import app
 
 class TestFlaskApp(unittest.TestCase):
     """Unit tests for the Flask application"""
+    
     def setUp(self):
         """Set up the test client for the Flask application."""
         self.app = app.test_client()
