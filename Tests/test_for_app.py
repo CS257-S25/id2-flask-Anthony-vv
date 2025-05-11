@@ -21,10 +21,7 @@ class TestFlaskApp(unittest.TestCase):
         with patch('ProductionCode.covid_stats.stats') as mock_stats:
             mock_stats.return_value = (100, 5)
 
-            response = self.app.get(
-                '/compare/2020-03-01/',
-                query_string='US,AF'
-            )
+            response = self.app.get('/compare/2020-03-01/US,AF')
             self.assertIn(b'COVID-19 data for 2020-03-01:', response.data)
             self.assertIn(b'US: Cases=100, Deaths=5', response.data)
             self.assertIn(b'AF: Cases=100, Deaths=5', response.data)
@@ -36,7 +33,16 @@ class TestFlaskApp(unittest.TestCase):
             side_effect=KeyError("Invalid country code")
         ):
             response = self.app.get('/compare/2020-03-01/INVALID')
-            self.assertIn(b'Error: Invalid country code', response.data)
+            self.assertIn(b"Error: Invalid country code", response.data)
+
+    def test_compare_value_error(self):
+        """Test the compare route when a ValueError is raised."""
+        with patch(
+            'ProductionCode.covid_stats.stats',
+            side_effect=ValueError("Date out of range")
+        ):
+            response = self.app.get('/compare/2020-03-01/US')
+            self.assertIn(b'Error: Date out of range', response.data)
 
 if __name__ == '__main__':
     unittest.main()
