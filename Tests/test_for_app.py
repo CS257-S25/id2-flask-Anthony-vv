@@ -22,7 +22,7 @@ class TestFlaskApp(unittest.TestCase):
             mock_stats.return_value = (100, 5)
             response = self.app.get(
                 '/compare/2020-03-01/US,AF'
-            )
+            )  # This line was too long, now split into two.
             self.assertIn(b'COVID-19 data for 2020-03-01:', response.data)
             self.assertIn(b'US: Cases=100, Deaths=5', response.data)
             self.assertIn(b'AF: Cases=100, Deaths=5', response.data)
