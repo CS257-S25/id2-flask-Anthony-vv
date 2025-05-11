@@ -21,6 +21,7 @@ class TestFlaskApp(unittest.TestCase):
         with patch('ProductionCode.covid_stats.stats') as mock_stats:
             mock_stats.return_value = (100, 5)
             
+            # Split long URL across multiple lines
             response = self.app.get(
                 '/compare/2020-03-01/'  
                 'US,AF'  
