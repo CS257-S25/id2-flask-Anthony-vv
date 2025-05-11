@@ -20,7 +20,9 @@ class TestFlaskApp(unittest.TestCase):
         """Test the compare route with valid data."""
         with patch('ProductionCode.covid_stats.stats') as mock_stats:
             mock_stats.return_value = (100, 5)
-            response = self.app.get('/compare/2020-03-01/US,AF')
+            response = self.app.get(
+                '/compare/2020-03-01/US,AF'
+            )
             self.assertIn(b'COVID-19 data for 2020-03-01:', response.data)
             self.assertIn(b'US: Cases=100, Deaths=5', response.data)
             self.assertIn(b'AF: Cases=100, Deaths=5', response.data)
