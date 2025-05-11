@@ -1,11 +1,12 @@
 """Unit tests for the Flask application for COVID-19 stats comparison"""
 
 import unittest
+from unittest.mock import patch
 from app import app
 
 class TestFlaskApp(unittest.TestCase):
     """Unit tests for the Flask application"""
-    
+
     def setUp(self):
         """Set up the test client for the Flask application."""
         self.app = app.test_client()
@@ -17,14 +18,18 @@ class TestFlaskApp(unittest.TestCase):
 
     def test_compare_valid_data(self):
         """Test the compare route with valid data."""
-        response = self.app.get('/compare/2020-03-01/US,AF')
-        self.assertIn(b'COVID-19 data for 2020-03-01:', response.data)
+        with patch('ProductionCode.covid_stats.stats') as mock_stats:
+            mock_stats.return_value = (100, 5)
+            response = self.app.get('/compare/2020-03-01/US,AF')
+            self.assertIn(b'COVID-19 data for 2020-03-01:', response.data)
+            self.assertIn(b'US: Cases=100, Deaths=5', response.data)
+            self.assertIn(b'AF: Cases=100, Deaths=5', response.data)
 
-    # Uncomment and implement this test if needed
-    # def test_compare_invalid_date(self):
-    #     """Test the compare route with an invalid date."""
-    #     response = self.app.get('/compare/invalid-date/US,GB')
-    #     self.assertIn(b'Error:', response.data)
+    def test_compare_invalid_country(self):
+        """Test the compare route with an invalid country to trigger error handling."""
+        with patch('ProductionCode.covid_stats.stats', side_effect=KeyError("Invalid country code")):
+            response = self.app.get('/compare/2020-03-01/INVALID')
+            self.assertIn(b'Error: Invalid country code', response.data)
 
 if __name__ == '__main__':
     unittest.main()
