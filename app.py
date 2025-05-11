@@ -28,7 +28,7 @@ def compare(date, countries):
             output += f"{country}: Cases={cases}, Deaths={deaths}\n"
         return output
     except (ValueError, KeyError) as e:
-        return f"Error: {str(e)}"
+        return f"Error: {e.args[0]}"
 
 if __name__ == '__main__':
     app.run(debug=True)
