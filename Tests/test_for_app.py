@@ -20,10 +20,10 @@ class TestFlaskApp(unittest.TestCase):
         """Test the compare route with valid data."""
         with patch('ProductionCode.covid_stats.stats') as mock_stats:
             mock_stats.return_value = (100, 5)
-            
+
             response = self.app.get(
-                '/compare/2020-03-01/'  
-                'US,AF'  
+                '/compare/2020-03-01/',
+                query_string='US,AF'
             )
             self.assertIn(b'COVID-19 data for 2020-03-01:', response.data)
             self.assertIn(b'US: Cases=100, Deaths=5', response.data)
@@ -31,7 +31,10 @@ class TestFlaskApp(unittest.TestCase):
 
     def test_compare_invalid_country(self):
         """Test the compare route with an invalid country to trigger error handling."""
-        with patch('ProductionCode.covid_stats.stats', side_effect=KeyError("Invalid country code")):
+        with patch(
+            'ProductionCode.covid_stats.stats',
+            side_effect=KeyError("Invalid country code")
+        ):
             response = self.app.get('/compare/2020-03-01/INVALID')
             self.assertIn(b'Error: Invalid country code', response.data)
 
